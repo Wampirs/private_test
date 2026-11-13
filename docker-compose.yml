@@ -1,0 +1,75 @@
+services:
+  postgres_main:
+    image: postgres:18.7
+    container_name: pg_main_container
+    environment:
+      POSTGRES_USER: pos_us
+      POSTGRES_PASSWORD: pos_pass
+      POSTGRES_DB: priv_main_db
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - "5430:5432"
+    volumes:
+      - ./pgdata_main:/var/lib/postgresql/data/pgdata
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+    command: >
+      postgres -c max_connections=100
+               -c shared_buffers=256MB
+               -c effective_cache_size=768MB
+               -c maintenance_work_mem=64MB
+               -c checkpoint_completion_target=0.7
+               -c wal_buffers=16MB
+               -c default_statistics_target=100
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U pos_us -d priv_main_db" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    restart: unless-stopped
+    tty: true
+    stdin_open: true
+
+  postgres_replica:
+    image: postgres:18.7
+    container_name: pg_replica_container
+    environment:
+      POSTGRES_USER: pos_us
+      POSTGRES_PASSWORD: pos_pass
+      POSTGRES_DB: priv_replica_db
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - "5431:5432"
+    volumes:
+      - ./pgdata_replica:/var/lib/postgresql/data/pgdata
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+    command: >
+      postgres -c max_connections=100
+               -c shared_buffers=256MB
+               -c effective_cache_size=768MB
+               -c maintenance_work_mem=64MB
+               -c checkpoint_completion_target=0.7
+               -c wal_buffers=16MB
+               -c default_statistics_target=100
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U pos_us -d priv_replica_db" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    restart: unless-stopped
+    tty: true
+    stdin_open: true
+  
