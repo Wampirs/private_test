@@ -1,6 +1,8 @@
 services:
   postgres_main:
-    image: postgres:18.7
+    build:
+      context: .
+      target: main
     container_name: pg_main_container
     environment:
       POSTGRES_USER: pos_us
@@ -37,7 +39,9 @@ services:
     stdin_open: true
 
   postgres_replica:
-    image: postgres:18.7
+    build:
+      context: .
+      target: replica
     container_name: pg_replica_container
     environment:
       POSTGRES_USER: pos_us
