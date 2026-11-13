@@ -13,6 +13,7 @@ services:
       - "5430:5432"
     volumes:
       - ./pgdata_main:/var/lib/postgresql/data/pgdata
+      - ./sql/shared:/etc/sql
     deploy:
       resources:
         limits:
@@ -52,6 +53,7 @@ services:
       - "5431:5432"
     volumes:
       - ./pgdata_replica:/var/lib/postgresql/data/pgdata
+      - ./sql/shared:/etc/sql
     deploy:
       resources:
         limits:
