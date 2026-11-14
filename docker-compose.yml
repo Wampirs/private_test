@@ -1,3 +1,7 @@
+x-repl-env: &repl-env
+  REPL_USER: repl_user
+  REPL_PASSWORD: repl_pass
+
 services:
   postgres_main:
     build:
@@ -5,6 +9,7 @@ services:
       target: main
     container_name: pg_main_container
     environment:
+      <<: *repl-env
       POSTGRES_USER: pos_us
       POSTGRES_PASSWORD: pos_pass
       POSTGRES_DB: priv_main_db
@@ -34,9 +39,10 @@ services:
                -c default_statistics_target=100
                -c shared_preload_libraries=pg_cron
                -c cron.database_name=priv_main_db
+               -c wal_level=logical
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U pos_us -d priv_main_db" ]
-      interval: 30s
+      test: [ "CMD-SHELL", "pg_isready -h 127.0.0.1 -U pos_us -d priv_main_db" ]
+      interval: 5s
       timeout: 10s
       retries: 5
     restart: unless-stopped
@@ -48,7 +54,11 @@ services:
       context: .
       target: replica
     container_name: pg_replica_container
+    depends_on:
+      postgres_main:
+        condition: service_healthy
     environment:
+      <<: *repl-env
       POSTGRES_USER: pos_us
       POSTGRES_PASSWORD: pos_pass
       POSTGRES_DB: priv_replica_db

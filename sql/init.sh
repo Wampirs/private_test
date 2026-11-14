@@ -7,6 +7,8 @@ run_dir() {
     [ -e "$f" ] || continue
     echo ">>> applying $f"
     psql -v ON_ERROR_STOP=1 \
+         -v repl_user="$REPL_USER" \
+         -v repl_password="$REPL_PASSWORD" \
          --no-psqlrc -P pager=off \
          --username "$POSTGRES_USER" \
          --dbname "$POSTGRES_DB" \
