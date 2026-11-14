@@ -32,6 +32,8 @@ services:
                -c checkpoint_completion_target=0.7
                -c wal_buffers=16MB
                -c default_statistics_target=100
+               -c shared_preload_libraries=pg_cron
+               -c cron.database_name=priv_main_db
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U pos_us -d priv_main_db" ]
       interval: 30s

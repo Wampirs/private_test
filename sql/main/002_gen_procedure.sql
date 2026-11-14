@@ -1,15 +1,15 @@
 CREATE OR REPLACE PROCEDURE generate_t1_data
 (
-    date_from  timestamptz,
-    date_to    timestamptz,
-    need_rows  int,
-    batch_size int      DEFAULT 10000
+    date_from timestamptz,
+    date_to timestamptz,
+    need_rows int,
+    batch_size int DEFAULT 10000
 )
 LANGUAGE plpgsql
 AS $$
 DECLARE
     gen_count int := 0;
-    cur_batch_size    int;
+    cur_batch_size int;
 BEGIN
     IF date_to <= date_from THEN
         RAISE EXCEPTION 'date_to (%) must be greater than date_from (%)', date_to, date_from;
