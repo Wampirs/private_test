@@ -23,7 +23,7 @@ BEGIN
             SELECT uuidv7() AS t_guid,
                 date_from + random() * (date_to - date_from) AS t_dt,
                 round((random() * 9990 + 10)::numeric, 2) AS t_amount,
-                (1 + floor(random() * 2))::int AS t_state,
+                floor(random() * 2)::int AS t_state,
                 (1 + floor(random() * 2))::int AS op_type,
                 (floor(random() * 5000) + 1)::int AS op_client_id
             FROM generate_series(1, cur_batch_size)
