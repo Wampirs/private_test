@@ -1,0 +1,1 @@
+CREATE INDEX ix_t1_state_zero ON t1 (id) WHERE state = 0;
